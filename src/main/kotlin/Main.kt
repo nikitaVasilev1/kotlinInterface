@@ -60,41 +60,43 @@ interface Attachment {
     val tipe: String
 }
 
-open class videoAttachment(
+open class VideoAttachment(
+    override val tipe: String = "Видео",
+    override val id: Int,
+    override val ownerId: Int,
+    override val title: String,
+    override val description: String,
+    override val duration: String,
+    val video: Video = Video(id, ownerId, title, description, duration, tipe)
+) : Attachment {}
+
+open class AudioAttachment(
+    override val tipe: String = "Аудио",
+    override val id: Int,
+    override val ownerId: Int,
+    override val title: String,
+    override val description: String,
+    override val duration: String,
+    val audio: Audio = Audio(id, ownerId, title, description, duration, tipe)
+) : Attachment {}
+
+data class Video(
     override val id: Int,
     override val ownerId: Int,
     override val title: String,
     override val description: String,
     override val duration: String,
     override val tipe: String = "Видео"
-) : Attachment {}
+): VideoAttachment (tipe, id, ownerId, title, description, duration) {}
 
-open class audioAttachment(
+data class Audio(
     override val id: Int,
     override val ownerId: Int,
     override val title: String,
     override val description: String,
     override val duration: String,
     override val tipe: String = "Аудио"
-) : Attachment {}
-
-data class video(
-    override val id: Int,
-    override val ownerId: Int,
-    override val title: String,
-    override val description: String,
-    override val duration: String,
-    override val tipe: String = "Видео"
-) : videoAttachment(id, ownerId, title, description, duration, tipe) {}
-
-data class audio(
-    override val id: Int,
-    override val ownerId: Int,
-    override val title: String,
-    override val description: String,
-    override val duration: String,
-    override val tipe: String = "Видео"
-) : audioAttachment(id, ownerId, title, description, duration, tipe) {}
+) : AudioAttachment(tipe, id, ownerId, title, description, duration) {}
 
 data class Likes(
     val count: Int,
@@ -106,20 +108,20 @@ data class Likes(
 object WallService {
     private var posts = emptyArray<Post>()
     private var nextId = 1
-    private var videos = emptyArray<video>()
-    private var audios = emptyArray<audio>()
+    private var videos = emptyArray<Video>()
+    private var audios = emptyArray<Audio>()
 
     fun add(post: Post): Post {
         posts += post.copy(id = nextId++)
         return posts.last()
     }
 
-    fun addVideo(video: video): video {
+    fun addVideo(video: Video): Video {
         videos += video.copy(id = nextId++)
         return videos.last()
     }
 
-    fun addAudio(audio: audio): audio {
+    fun addAudio(audio: Audio): Audio {
         audios += audio.copy(id = nextId++)
         return audios.last()
     }
@@ -139,9 +141,9 @@ object WallService {
 }
 
 fun main(args: Array<String>) {
-    var videos = video(1,2,"title","description", "duration")
+    var videos = Video(1, 2, "title", "description", "duration")
     WallService.addVideo(videos)
-    var audios = audio(1,2,"title","description", "duration")
+    var audios = Audio(1, 2, "title", "description", "duration")
     WallService.addAudio(audios)
     val post = Post(3, 15, 10, 12, 10, "hello", 1, 1, date = 16688636)
     val posts = Post(4, 15, 10, 12, 10, "hello", 1, 1, date = 116688637)
