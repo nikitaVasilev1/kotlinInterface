@@ -1,0 +1,150 @@
+data class Post(
+    val id: Int,
+    val ownerId: Int,
+    val fromId: Int,
+    val createdBy: Int,
+    val like: Int?,
+    val text: String,
+    val replyOwnerId: Int,
+    val replyPostId: Int?,
+    val friendsOnly: Boolean = true,
+    val isPinned: Boolean = true,
+    val date: Long,
+    val attachments: Array<Attachment> = emptyArray()
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Post
+
+        if (id != other.id) return false
+        if (ownerId != other.ownerId) return false
+        if (fromId != other.fromId) return false
+        if (createdBy != other.createdBy) return false
+        if (like != other.like) return false
+        if (text != other.text) return false
+        if (replyOwnerId != other.replyOwnerId) return false
+        if (replyPostId != other.replyPostId) return false
+        if (friendsOnly != other.friendsOnly) return false
+        if (isPinned != other.isPinned) return false
+        if (date != other.date) return false
+        if (!attachments.contentEquals(other.attachments)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + ownerId
+        result = 31 * result + fromId
+        result = 31 * result + createdBy
+        result = 31 * result + (like ?: 0)
+        result = 31 * result + text.hashCode()
+        result = 31 * result + replyOwnerId
+        result = 31 * result + (replyPostId ?: 0)
+        result = 31 * result + friendsOnly.hashCode()
+        result = 31 * result + isPinned.hashCode()
+        result = 31 * result + date.hashCode()
+        result = 31 * result + attachments.contentHashCode()
+        return result
+    }
+}
+
+interface Attachment {
+    val id: Int
+    val ownerId: Int
+    val title: String
+    val description: String
+    val duration: String
+    val tipe: String
+}
+
+open class videoAttachment(
+    override val id: Int,
+    override val ownerId: Int,
+    override val title: String,
+    override val description: String,
+    override val duration: String,
+    override val tipe: String = "Видео"
+) : Attachment {}
+
+open class audioAttachment(
+    override val id: Int,
+    override val ownerId: Int,
+    override val title: String,
+    override val description: String,
+    override val duration: String,
+    override val tipe: String = "Аудио"
+) : Attachment {}
+
+data class video(
+    override val id: Int,
+    override val ownerId: Int,
+    override val title: String,
+    override val description: String,
+    override val duration: String,
+    override val tipe: String = "Видео"
+) : videoAttachment(id, ownerId, title, description, duration, tipe) {}
+
+data class audio(
+    override val id: Int,
+    override val ownerId: Int,
+    override val title: String,
+    override val description: String,
+    override val duration: String,
+    override val tipe: String = "Видео"
+) : audioAttachment(id, ownerId, title, description, duration, tipe) {}
+
+data class Likes(
+    val count: Int,
+    val userLikes: Boolean,
+    val canLike: Boolean,
+    val canPublish: Boolean
+) {}
+
+object WallService {
+    private var posts = emptyArray<Post>()
+    private var nextId = 1
+    private var videos = emptyArray<video>()
+    private var audios = emptyArray<audio>()
+
+    fun add(post: Post): Post {
+        posts += post.copy(id = nextId++)
+        return posts.last()
+    }
+
+    fun addVideo(video: video): video {
+        videos += video.copy(id = nextId++)
+        return videos.last()
+    }
+
+    fun addAudio(audio: audio): audio {
+        audios += audio.copy(id = nextId++)
+        return audios.last()
+    }
+
+    fun update(newPost: Post): Boolean {
+        for ((index, post) in posts.withIndex()) {
+            if (post.id == newPost.id) {
+                posts[index] = newPost.copy(
+                    ownerId = post.ownerId,
+                    date = post.date
+                )
+                return true
+            }
+        }
+        return false
+    }
+}
+
+fun main(args: Array<String>) {
+    var videos = video(1,2,"title","description", "duration")
+    WallService.addVideo(videos)
+    var audios = audio(1,2,"title","description", "duration")
+    WallService.addAudio(audios)
+    val post = Post(3, 15, 10, 12, 10, "hello", 1, 1, date = 16688636)
+    val posts = Post(4, 15, 10, 12, 10, "hello", 1, 1, date = 116688637)
+    println(WallService.add(posts))
+    println(WallService.update(posts))
+}
