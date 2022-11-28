@@ -61,42 +61,43 @@ interface Attachment {
 }
 
 open class VideoAttachment(
+    override val id: Int = 1,
+    override val ownerId: Int = 1,
+    override val title: String = "title",
+    override val description: String = "description",
+    override val duration: String = "duration",
     override val tipe: String = "Видео",
-    override val id: Int,
-    override val ownerId: Int,
-    override val title: String,
-    override val description: String,
-    override val duration: String,
-    val video: Video = Video(id, ownerId, title, description, duration, tipe)
-) : Attachment {}
+    val video: Video = Video(id, ownerId,title, description, duration, tipe)
+) : Attachment {
+}
 
 open class AudioAttachment(
+    override val id: Int = 1,
+    override val ownerId: Int = 1,
+    override val title: String = "title",
+    override val description: String = "description",
+    override val duration: String = "duration",
     override val tipe: String = "Аудио",
-    override val id: Int,
-    override val ownerId: Int,
-    override val title: String,
-    override val description: String,
-    override val duration: String,
-    val audio: Audio = Audio(id, ownerId, title, description, duration, tipe)
+    val video: Audio = Audio(id, ownerId,title, description, duration, tipe)
 ) : Attachment {}
 
 data class Video(
-    override val id: Int,
-    override val ownerId: Int,
-    override val title: String,
-    override val description: String,
-    override val duration: String,
+    override val id: Int = 1,
+    override val ownerId: Int = 1,
+    override val title: String = "title",
+    override val description: String = "description",
+    override val duration: String = "duration",
     override val tipe: String = "Видео"
-): VideoAttachment (tipe, id, ownerId, title, description, duration) {}
+) : VideoAttachment(id, ownerId, title, description, duration, tipe) {}
 
 data class Audio(
-    override val id: Int,
-    override val ownerId: Int,
-    override val title: String,
-    override val description: String,
-    override val duration: String,
+    override val id: Int = 1,
+    override val ownerId: Int = 1,
+    override val title: String = "title",
+    override val description: String = "description",
+    override val duration: String = "duration",
     override val tipe: String = "Аудио"
-) : AudioAttachment(tipe, id, ownerId, title, description, duration) {}
+) : AudioAttachment(id, ownerId, title, description, duration, tipe) {}
 
 data class Likes(
     val count: Int,
