@@ -67,7 +67,7 @@ open class VideoAttachment(
     override val description: String = "description",
     override val duration: String = "duration",
     override val tipe: String = "Видео",
-    val video: Video = Video(id, ownerId,title, description, duration, tipe)
+    val video: Video = Video()
 ) : Attachment {
 }
 
@@ -78,7 +78,7 @@ open class AudioAttachment(
     override val description: String = "description",
     override val duration: String = "duration",
     override val tipe: String = "Аудио",
-    val video: Audio = Audio(id, ownerId,title, description, duration, tipe)
+    val video: Audio = Audio()
 ) : Attachment {}
 
 data class Video(
@@ -88,7 +88,7 @@ data class Video(
     override val description: String = "description",
     override val duration: String = "duration",
     override val tipe: String = "Видео"
-) : VideoAttachment(id, ownerId, title, description, duration, tipe) {}
+) : VideoAttachment() {}
 
 data class Audio(
     override val id: Int = 1,
@@ -97,7 +97,7 @@ data class Audio(
     override val description: String = "description",
     override val duration: String = "duration",
     override val tipe: String = "Аудио"
-) : AudioAttachment(id, ownerId, title, description, duration, tipe) {}
+) : AudioAttachment() {}
 
 data class Likes(
     val count: Int,
