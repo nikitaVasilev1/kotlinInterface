@@ -66,8 +66,7 @@ open class VideoAttachment(
     override val title: String = "title",
     override val description: String = "description",
     override val duration: String = "duration",
-    override val tipe: String = "Видео",
-    val video: Video = Video()
+    override val tipe: String = "Видео"
 ) : Attachment {
 }
 
@@ -78,7 +77,6 @@ open class AudioAttachment(
     override val description: String = "description",
     override val duration: String = "duration",
     override val tipe: String = "Аудио",
-    val video: Audio = Audio()
 ) : Attachment {}
 
 data class Video(
